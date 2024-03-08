@@ -29,6 +29,7 @@ class UserPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => Color::Lime,
+                'gray' => Color::Pink
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
