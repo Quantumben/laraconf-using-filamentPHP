@@ -6,6 +6,7 @@ use App\Enums\Region;
 use App\Filament\Resources\ConferenceResource\Pages;
 use App\Filament\Resources\ConferenceResource\RelationManagers;
 use App\Models\Conference;
+use App\Models\Speaker;
 use App\Models\Venue;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -61,8 +62,14 @@ class ConferenceResource extends Resource
                     // ->editOptionForm(Venue::getForm())
                     ->relationship('venue', 'name', modifyQueryUsing: function (Builder $query, Forms\Get $get){
                     return $query->where('region', $get('region'));
-                })
+                }),
 
+                Forms\Components\CheckboxList::make('speaker')
+                    ->relationship('speakers', 'name')
+                    ->options(
+                        Speaker::all()->pluck('name','id')
+                    )
+                ->required(),
 
             ]);
     }
