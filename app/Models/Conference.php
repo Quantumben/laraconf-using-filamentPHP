@@ -43,18 +43,21 @@ class Conference extends Model
     {
         return [
             Section::make('Conference Details')
+                ->columns(2)
                 ->schema([
 
                     Forms\Components\TextInput::make('name')
+                        ->columnSpanFull()
                         ->label('Conference Name')
-                        ->helperText('The name of the conference.')
-                        ->hint('Here is the hint')
                         ->hintIcon('heroicon-o-rectangle-stack')
                         ->default('New Conference')
                         ->required()
                         ->maxLength(255),
+
                     Forms\Components\MarkdownEditor::make('description')
+                        ->columnSpanFull()
                         ->required(),
+                        
                     Forms\Components\DateTimePicker::make('start_date')
                         ->native(false)
                         ->required(),
