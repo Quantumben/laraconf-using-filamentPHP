@@ -3,9 +3,9 @@
 namespace App\Models;
 use Filament\Forms;
 use App\Enums\Region;
-use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Builder;
@@ -98,7 +98,8 @@ class Conference extends Model
                             ->searchable()
                             ->preload()
                             ->createOptionForm(Venue::getForm())
-                            // ->editOptionForm(Venue::getForm())
+                            // unset($data['venue_id'])
+                            // ->editOptionForm(Venue::getForm()) /// unset($data['venue_id']);
                             ->relationship('venue', 'name', modifyQueryUsing: function (Builder $query, Forms\Get $get){
                             return $query->where('region', $get('region'));
                         }),
@@ -125,7 +126,16 @@ class Conference extends Model
             // Section::make('Location')
             //     ->columns(2)
 
-
+        Actions::make([
+            Action::make('Save')
+            ->label('Fill with factory data')
+            ->icon('heroicon-o-star')
+            ->action(function ($livewire){
+                $data = Conference::factory()->make()->toArray();
+                // unset($data['venue_id']);
+                $livewire->form->fill($data);
+            }),
+        ])
 
 
         ];
