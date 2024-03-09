@@ -47,7 +47,7 @@ class Conference extends Model
                 ->collapsible()
                 ->description('These are the details of the conference.')
                 ->icon('heroicon-o-information-circle')
-                ->columns(2)
+                ->columns(['md' => 2, 'lg' => 3])
                 ->schema([
 
                     Forms\Components\TextInput::make('name')
