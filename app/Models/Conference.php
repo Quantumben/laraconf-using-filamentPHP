@@ -6,6 +6,7 @@ use App\Enums\Region;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,69 +44,78 @@ class Conference extends Model
     public static function getForm(): array
     {
         return [
-            Section::make('Conference Details')
-                ->collapsible()
-                ->description('These are the details of the conference.')
-                ->icon('heroicon-o-information-circle')
-                ->columns(['md' => 2, 'lg' => 3])
-                ->schema([
+            Tabs::make()
+                ->columnSpanFull()
+                ->tabs([
+                    Tabs\Tab::make('Conference Details')
 
-                    Forms\Components\TextInput::make('name')
-                        ->columnSpanFull()
-                        ->label('Conference Name')
-                        ->hintIcon('heroicon-o-rectangle-stack')
-                        ->default('New Conference')
-                        ->required()
-                        ->maxLength(255),
+                    ->schema([
 
-                    Forms\Components\MarkdownEditor::make('description')
-                        ->columnSpanFull()
-                        ->required(),
+                        Forms\Components\TextInput::make('name')
+                            ->columnSpanFull()
+                            ->label('Conference Name')
+                            ->hintIcon('heroicon-o-rectangle-stack')
+                            ->default('New Conference')
+                            ->required()
+                            ->maxLength(255),
 
-                    Forms\Components\DateTimePicker::make('start_date')
-                        ->native(false)
-                        ->required(),
-
-                    Forms\Components\DateTimePicker::make('end_date')
-                        ->required(),
-
-                    Fieldset::make('Status')
-                        ->columns(1)
-                        ->schema([
-
-                        Forms\Components\Select::make('status')
-                            ->options([
-                                    'draft' => 'Draft',
-                                    'published' => 'Published',
-                                    'archived' => 'Archived'
-                                ])
+                        Forms\Components\MarkdownEditor::make('description')
+                            ->columnSpanFull()
                             ->required(),
-                        ]),
 
-                        Toggle::make('is_published'),
+                        Forms\Components\DateTimePicker::make('start_date')
+                            ->native(false)
+                            ->required(),
 
+                        Forms\Components\DateTimePicker::make('end_date')
+                            ->required(),
+
+                        Fieldset::make('Status')
+                            ->columns(1)
+                            ->schema([
+
+                            Forms\Components\Select::make('status')
+                                ->options([
+                                        'draft' => 'Draft',
+                                        'published' => 'Published',
+                                        'archived' => 'Archived'
+                                    ])
+                                ->required(),
+                            ]),
+
+                            Toggle::make('is_published'),
+
+                    ]),
+
+                    Tabs\Tab::make('Location')
+                    ->schema([
+                        Forms\Components\Select::make('region')
+                            ->live()
+                            ->enum(Region::class)
+                            ->options(Region::class),
+
+                        Forms\Components\Select::make('venue_id')
+                            ->searchable()
+                            ->preload()
+                            ->createOptionForm(Venue::getForm())
+                            // ->editOptionForm(Venue::getForm())
+                            ->relationship('venue', 'name', modifyQueryUsing: function (Builder $query, Forms\Get $get){
+                            return $query->where('region', $get('region'));
+                        }),
+
+                    ]),
                 ]),
+            // Section::make('Conference Details')
+            //     ->collapsible()
+            //     ->description('These are the details of the conference.')
+            //     ->icon('heroicon-o-information-circle')
+            //     ->columns(2)
 
 
-            Section::make('Location')
-                ->columns(2)
-                ->schema([
 
-                Forms\Components\Select::make('region')
-                    ->live()
-                    ->enum(Region::class)
-                    ->options(Region::class),
+            // Section::make('Location')
+            //     ->columns(2)
 
-                Forms\Components\Select::make('venue_id')
-                    ->searchable()
-                    ->preload()
-                    ->createOptionForm(Venue::getForm())
-                    // ->editOptionForm(Venue::getForm())
-                    ->relationship('venue', 'name', modifyQueryUsing: function (Builder $query, Forms\Get $get){
-                    return $query->where('region', $get('region'));
-                }),
-
-                ]),
 
             Forms\Components\CheckboxList::make('speaker')
                 ->relationship('speakers', 'name')
