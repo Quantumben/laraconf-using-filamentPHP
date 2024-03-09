@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Models;
-
+use Filament\Forms;
 use App\Enums\Region;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Toggle;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,5 +36,59 @@ class Conference extends Model
     public function talks(): BelongsToMany
     {
         return $this->belongsToMany(Talk::class);
+    }
+
+    public static function getForm(): array
+    {
+        return [
+            Forms\Components\TextInput::make('name')
+                ->label('Conference Name')
+                ->helperText('The name of the conference.')
+                ->hint('Here is the hint')
+                ->hintIcon('heroicon-o-rectangle-stack')
+                ->default('New Conference')
+                ->required()
+                ->maxLength(255),
+            Forms\Components\MarkdownEditor::make('description')
+                ->required(),
+            Forms\Components\DateTimePicker::make('start_date')
+                ->native(false)
+                ->required(),
+            Forms\Components\DateTimePicker::make('end_date')
+                ->required(),
+
+            Toggle::make('is_published'),
+
+            Forms\Components\Select::make('status')
+                ->options(
+                    [
+                        'draft' => 'Draft',
+                        'published' => 'Published',
+                        'archived' => 'Archived'
+                    ]
+                    )
+                ->required(),
+                Forms\Components\Select::make('region')
+                ->live()
+                ->enum(Region::class)
+                ->options(Region::class),
+
+            Forms\Components\Select::make('venue_id')
+                ->searchable()
+                ->preload()
+                ->createOptionForm(Venue::getForm())
+                // ->editOptionForm(Venue::getForm())
+                ->relationship('venue', 'name', modifyQueryUsing: function (Builder $query, Forms\Get $get){
+                return $query->where('region', $get('region'));
+            }),
+
+            Forms\Components\CheckboxList::make('speaker')
+                ->relationship('speakers', 'name')
+                ->options(
+                    Speaker::all()->pluck('name','id')
+                )
+            ->required(),
+
+                ];
     }
 }
