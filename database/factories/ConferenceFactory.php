@@ -29,7 +29,7 @@ class ConferenceFactory extends Factory
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
             'start_date' => $startDate,
-            'end_date' => $$endDate,
+            'end_date' => $endDate,
             'status' => $this->faker->randomElement(['draft', 'published', 'archived']),
             'region' => $this->faker->randomElement(Region::class),
             'venue_id' => null,
