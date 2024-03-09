@@ -130,6 +130,17 @@ class Conference extends Model
             Action::make('Save')
             ->label('Fill with factory data')
             ->icon('heroicon-o-star')
+            ->visible( function($operation) {
+                if($operation !== 'create'){
+                    return false;
+                }
+
+                if(!app()->environment('local')){
+                    return false;
+                }
+
+                return true;
+            })
             ->action(function ($livewire){
                 $data = Conference::factory()->make()->toArray();
                 // unset($data['venue_id']);
