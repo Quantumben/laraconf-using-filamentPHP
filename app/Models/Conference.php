@@ -4,6 +4,7 @@ namespace App\Models;
 use Filament\Forms;
 use App\Enums\Region;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,21 +42,25 @@ class Conference extends Model
     public static function getForm(): array
     {
         return [
-            Forms\Components\TextInput::make('name')
-                ->label('Conference Name')
-                ->helperText('The name of the conference.')
-                ->hint('Here is the hint')
-                ->hintIcon('heroicon-o-rectangle-stack')
-                ->default('New Conference')
-                ->required()
-                ->maxLength(255),
-            Forms\Components\MarkdownEditor::make('description')
-                ->required(),
-            Forms\Components\DateTimePicker::make('start_date')
-                ->native(false)
-                ->required(),
-            Forms\Components\DateTimePicker::make('end_date')
-                ->required(),
+            Section::make('Conference Details')
+                ->schema([
+
+                    Forms\Components\TextInput::make('name')
+                        ->label('Conference Name')
+                        ->helperText('The name of the conference.')
+                        ->hint('Here is the hint')
+                        ->hintIcon('heroicon-o-rectangle-stack')
+                        ->default('New Conference')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\MarkdownEditor::make('description')
+                        ->required(),
+                    Forms\Components\DateTimePicker::make('start_date')
+                        ->native(false)
+                        ->required(),
+                    Forms\Components\DateTimePicker::make('end_date')
+                        ->required(),
+                ]),
 
             Toggle::make('is_published'),
 
