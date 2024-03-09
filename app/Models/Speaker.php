@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -25,15 +26,19 @@ class Speaker extends Model
             Forms\Components\TextInput::make('name')
                 ->required()
                 ->maxLength(255),
+
+            FileUpload::make('avatar')
+                ->avatar()
+                ->imageEditor()
+                ->directory('avatars')
+                ->maxSize(1024 * 1024 * 10),
+
             Forms\Components\TextInput::make('email')
                 ->email()
-                ->required()
                 ->maxLength(255),
             Forms\Components\Textarea::make('bio')
-                ->required()
                 ->columnSpanFull(),
             Forms\Components\TextInput::make('twitter_handle')
-                ->required()
                 ->maxLength(255),
             Forms\Components\CheckboxList::make('qualifications')
                 ->columnSpanFull()
