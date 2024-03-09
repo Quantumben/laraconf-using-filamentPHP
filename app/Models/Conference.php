@@ -104,6 +104,15 @@ class Conference extends Model
                         }),
 
                     ]),
+
+                    //last tab
+                    Tabs\Tab::make('Speaker')
+                    ->schema([
+                        Forms\Components\CheckboxList::make('speaker')
+                        ->relationship('speakers', 'name')
+                        ->options(Speaker::all()->pluck('name','id'))
+                        ->required(),
+                    ])
                 ]),
             // Section::make('Conference Details')
             //     ->collapsible()
@@ -117,10 +126,7 @@ class Conference extends Model
             //     ->columns(2)
 
 
-            Forms\Components\CheckboxList::make('speaker')
-                ->relationship('speakers', 'name')
-                ->options(Speaker::all()->pluck('name','id'))
-            ->required(),
+
 
         ];
     }
