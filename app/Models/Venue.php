@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Region;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,7 +42,11 @@ class Venue extends Model implements HasMedia
                 ->maxLength(255),
             Forms\Components\Select::make('region')
                 ->enum(Region::class)
-                ->options(Region::class)
+                ->options(Region::class),
+            SpatieMediaLibraryFileUpload::make('images')
+                ->collection('venue-images')
+                ->multiple()
+                ->image(),
         ];
     }
 }
