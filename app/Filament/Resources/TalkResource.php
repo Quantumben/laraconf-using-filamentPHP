@@ -47,7 +47,7 @@ class TalkResource extends Resource
                     }),
 
                 Tables\Columns\ImageColumn::make('speaker.avatar')
-                    
+                    ->circular()
                     ->defaultImageUrl(function ($record){
                         return 'https://ui-avatars.com/api/?name=Elon+Musk' . urlencode($record->speaker->name);
                     }),
