@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\TalkLength;
 use Filament\Forms;
 use App\Models\Talk;
 use Filament\Tables;
@@ -52,7 +53,7 @@ class TalkResource extends Resource
                         return 'https://ui-avatars.com/api/?name=Elon+Musk' . urlencode($record->speaker->name);
                     }),
 
-                Tables\Columns\TextColumn::make('speaker.name')
+                Tables\Columns\TextColumn::make(TextInputColumn'speaker.name')
                     ->sortable()
                     ->searchable(),
 
@@ -64,6 +65,16 @@ class TalkResource extends Resource
                     ->color(function ($state){
                         return $state->getColor();
                     }),
+
+                Tables\Columns\TextColumn::make('length')
+                    ->icon( function ($state){
+                        return match($state){
+                            TalkLength::NORMAL => 'heroicon-o-megaphone',
+                            TalkLength::LIGHTNING => 'heroicon-o-bolt',
+                            TalkLength::KEYNOTE => 'heroicon-o-key',
+                        };
+
+                    })
             ])
             ->filters([
                 //
