@@ -2,15 +2,16 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\TalkLength;
 use Filament\Forms;
 use App\Models\Talk;
 use Filament\Tables;
 use Filament\Forms\Form;
+use App\Enums\TalkLength;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TernaryFilter;
 use App\Filament\Resources\TalkResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TalkResource\RelationManagers;
@@ -79,7 +80,22 @@ class TalkResource extends Resource
                     })
             ])
             ->filters([
-                //
+                TernaryFilter::make('new_talk'),
+                Tables\Filters\SelectFilter::make('speaker')
+                    ->relationship('speaker', 'name')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+
+                Tables\Filters\Filter::make('has_avatar')
+                    ->label('Show only speakers with Avatar')
+                    ->toggle()
+                    ->query(function ($query){
+                        return $query->whereHas('speaker', function (Builder $query){
+                            return  $query->whereNotNull('avatar');
+                        });
+                    }),
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
