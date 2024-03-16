@@ -41,6 +41,8 @@ class TalkResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextInputColumn::make('title')
+                    ->sortable()
+                    ->rules(['required', 'max:255'])
                     ->searchable(),
 
                 Tables\Columns\ImageColumn::make('speaker.avatar')
@@ -55,6 +57,8 @@ class TalkResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\ToggleColumn::make('new_talk'),
+
+                Tables\Columns\TextColumn::make('status')->badge(),
             ])
             ->filters([
                 //
