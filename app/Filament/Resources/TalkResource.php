@@ -41,10 +41,12 @@ class TalkResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextInputColumn::make('title')
+                Tables\Columns\TextColumn::make('title')
                     ->sortable()
-                    ->rules(['required', 'max:255'])
-                    ->searchable(),
+                    ->searchable()
+                    ->description(function (Talk $record){
+                        return Str::limit($record->abstract, 40, '...');
+                    }),
 
                 Tables\Columns\ImageColumn::make('speaker.avatar')
                     ->label('Speaker Avatar')
@@ -53,7 +55,7 @@ class TalkResource extends Resource
                         return 'https://ui-avatars.com/api/?name=Elon+Musk' . urlencode($record->speaker->name);
                     }),
 
-                Tables\Columns\TextColumn::make(TextInputColumn'speaker.name')
+                Tables\Columns\TextColumn::make('speaker.name')
                     ->sortable()
                     ->searchable(),
 
