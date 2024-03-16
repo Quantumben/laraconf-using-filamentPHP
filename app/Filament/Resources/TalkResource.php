@@ -41,6 +41,7 @@ class TalkResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->persistFiltersInSession()
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->sortable()
