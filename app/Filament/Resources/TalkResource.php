@@ -58,7 +58,12 @@ class TalkResource extends Resource
 
                 Tables\Columns\ToggleColumn::make('new_talk'),
 
-                Tables\Columns\TextColumn::make('status')->badge(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->sortable()
+                    ->color(function ($state){
+                        return $state->getColor();
+                    }),
             ])
             ->filters([
                 //
