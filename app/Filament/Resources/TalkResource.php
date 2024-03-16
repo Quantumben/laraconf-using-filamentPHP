@@ -2,16 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TalkResource\Pages;
-use App\Filament\Resources\TalkResource\RelationManagers;
-use App\Models\Talk;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\Talk;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\TalkResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\TalkResource\RelationManagers;
 
 class TalkResource extends Resource
 {
@@ -42,7 +43,13 @@ class TalkResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->description( function(Talk $record){
-                        return $record->abstract;
+                        return Str::of($record->abstract)->limit(40);
+                    }),
+
+                Tables\Columns\ImageColumn::make('speaker.avatar')
+                    
+                    ->defaultImageUrl(function ($record){
+                        return 'https://ui-avatars.com/api/?name=Elon+Musk' . urlencode($record->speaker->name);
                     }),
 
                 Tables\Columns\TextColumn::make('speaker.name')
