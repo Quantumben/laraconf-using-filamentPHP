@@ -42,6 +42,9 @@ class TalkResource extends Resource
     {
         return $table
             ->persistFiltersInSession()
+            ->filtersTriggerAction(function($action){
+                return $action->button()->label('Filter Here');
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->sortable()
